@@ -1,0 +1,77 @@
+{% extends 'store/base.html' %}
+
+			{% block container %}
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="cart_info">
+					    <table class="table table-hover">
+					        <thead class="text-center">
+					            <tr>
+					                <th scope="col">#</th>
+					                <th scope="col" style="width: 250px">Name</th>
+					                <th scope="col" style="width: 250">Qty</th>
+					                <th scope="col">Price</th>
+					                <th scope="col">Action</th>
+					            </tr>
+					        </thead>
+					        <tbody class="text-center">
+					        {% for item in cart %}
+					        	{% with book=item.book %}
+				           		 <tr>
+					                <td class="cart_coverpage"><a href=""><img src="{{ book.coverpage.url }}"></a></td>
+					                <td>{{ book.name }}</td>
+					                <td class="cart_quantity"><input type="text" name="qty" value="{{ item.quantity }}" onchange ="updateCartItem(this,{{ book.id }})" style="width: 30px"></td>
+					                <td id="{{ book.id }}">₹{{ item.total_price }}</td>
+					                <td><a href="{% url 'cart:cart_remove' bookid=book.id %}" class="btn btn-danger"><i class="fa fa-trash-o"></i></a></td>
+					            </tr>
+					            {% endwith %}
+					        {% endfor %}
+					        </tbody>
+					    </table>
+						<div class="continue_or_next text-center">
+							<a href="{% url 'store:index' %}" class="btn btn-danger _to_shope ">Continue Shopping</a>
+							<a href="{% url 'order:order_create' %}" class="btn btn-primary _to_continue">Proceed to Checkout</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4" id="abc">
+
+				</div>
+			</div> 
+			{% endblock %}
+
+
+{% block scripts %}
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+		summary();
+ 
+	}); 
+	function summary(){
+		$.ajax({
+			url : "summary",
+			type : "GET",
+			success : function(data){
+				$("#abc").html(data);
+			}
+		})
+	}
+	function updateCartItem(obj,id){
+		$.ajax({
+			url: "update/"+id+"/"+obj.value,
+			type: "GET",
+			data: {
+				bookid: id,
+				quantity: obj.value
+			},
+			success	:function(data){
+				$("#"+(id.toString())).html(data);
+				summary();
+				totalCart();
+			}
+		})
+	}
+
+	</script>
+{% endblock %}

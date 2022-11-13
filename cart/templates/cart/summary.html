@@ -1,0 +1,8 @@
+{% load customfunction %}
+<ul class="list-group">
+	<li class="list-group-item d-flex justify-content-between align-items-center"><h4>Checkout Summary</h4></li>
+	<li class="list-group-item d-flex justify-content-between align-items-center">Books<span>{{ cart|length }}</span></li>
+	<li class="list-group-item d-flex justify-content-between align-items-center">Subtotal<span>₹{{ cart.get_total_price }}</span></li>
+	<li class="list-group-item d-flex justify-content-between align-items-center">Shipping<span>₹{{ cost|shipping }}</span></li>
+	<li class="list-group-item d-flex justify-content-between align-items-center">Payable Total<span>₹{{ cart.get_total_price|payabletotal}}</span></li>
+</ul>	

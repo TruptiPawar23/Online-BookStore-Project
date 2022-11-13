@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Book Store Sign In</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+	
+</head>
+<body style="background-image: url(https://i.pinimg.com/originals/0e/5f/1a/0e5f1a6fe2793d12411033b237fa23a5.png); background-repeat: no-repeat; background-size: 65%; background-color: #03074a; display: flex;">
+<div class="container">
+	<div class="row justify-content-md-center">
+		<div class="col-md-4 col-sm-3" style="margin-left: 110%;">
+			<div class="signin-form" style="background-color: white; margin-top: 90%; ">
+				{% if messages %}
+				<div class="messages">
+				    {% for message in messages %}
+				    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+				    {% endfor %}
+				</div>
+				{% endif %}
+				<h3> Sign In</h3>	
+				<form action="" method="POST" class="auth-validate-form">
+					{% csrf_token %}
+					<div class="form-group">
+					   <label>Username</label>
+					   <input type="text" name="user" class="form-control">
+					</div>
+					<div class="form-group">
+					   <label>Password</label>
+					   <input type="password" name="pass" class="form-control">
+					</div>
+					<button type="submit" class="btn btn-danger">Login</button>
+				</form>
+				
+				<div class="a-divider-break"><h5>New to BookStore?</h5></div>
+				<a class="btn btn-default" href="{% url 'store:registration' %}">Create you BookStore account</a>
+			</div> 
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Book Store Registration</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="container">
+	<div class="row justify-content-md-center">
+		<div class="col-md-4 col-sm-3">
+			<div class="signup-form">
+				<div class="messages"></div>	
+				<h3> Create account</h3>	
+				<form action="" method="POST" class="auth-validate-form">
+					{% csrf_token %}
+					{% for field in form %}
+					    <div class="form-group registration-form">
+					        {{ field.label_tag }}<br>
+					        {{ field }}
+
+					        {% if field.help_text %}{% endif %}
+
+					        {% for error in field.errors %}
+					          <p style="color: red;font-size: 13px">{{ error }}</p>
+					        {% endfor %}
+					    </div>
+					{% endfor %}
+					<button class="btn btn-danger">Create you BookStore account</button>
+				</form>
+				<div class="a-divider-break"></div>
+				<div class="a-divider-inner">
+					<div class="a-row">
+					    Already have an account?
+					    <a class="a-link-emphasis" href="{% url 'store:signin' %}"><i class='fa fa-caret-right'></i> Sign in</a>
+					</div>						
+				</div>
+			</div> 
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends 'store/base.html' %} {% load static %} {% load customfunction %} {% block headermenu %} {% endblock %} {% block container %}
+<div class="row">
+    <div class="col-sm-12" >
+        <div style="margin:0 auto; border:50px black;">
+            <ul id="demo3">
+                {% for sld in slide %}
+                <li><img height="0px" src="{{ sld.slideimg.url }}" /></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="titleheader">
+            <h3 class="h2header text-center">Top Selling Book</h3>
+        </div>
+        <div class="regulara sliderzx">
+            {% for p in newbooks %}
+            <div class="book-wrapper text-center">
+                <div class="coverpage">
+                    <img src="{{ p.coverpage.url }}" />
+                </div>
+                <a href="{% url 'store:book' id=p.id %}">{{ p.name|text_short }}</a>
+                <a href="{% url 'store:writer'  id=p.writer.id %}">{{ p.writer }}</a>
+                <div class="rating">
+                    {{ p.totalrating|averagerating:p.totalreview }}
+                    <span class="totalrating">{{ p.totalreview|add:-1 }}</span>
+                </div>
+                <p> ₹{{ p.price }}</p>
+                <button class="btn btn-danger" id="addTocart" data-book-id="{{ p.id }}">
+									<i class="fa fa-shopping-cart""></i>Add to cart
+								</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

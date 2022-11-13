@@ -1,0 +1,68 @@
+{% extends 'store/base.html' %}
+{% load customfunction %}
+{% block container %}
+			<div class="row">
+				{% for item in book %}
+				<div class = 'col-sm-3' >
+					<div class="book-wrapper text-center " >
+						<div class="coverpage">
+							
+							<img style= "border-50px;" src="{{ item.coverpage.url }}"/>
+							
+						</div>
+						<a href="{% url 'store:book' id=item.id %}">{{ item.name }}</a>
+						<a href="{% url 'store:writer'  id=item.writer.id %}">{{ item.writer }}</a>
+						<div class="rating">
+							{{ item.totalrating|averagerating:item.totalreview }}
+							<span class="totalrating">{{ item.totalreview|add:-1 }}</span>
+						</div>
+						<p> ₹{{ item.price }}</p>
+						<button class="btn btn-danger" id="addTocart" data-book-id="{{ item.id }}">
+								<i class="fa fa-shopping-cart""></i>Add to cart
+						</button>
+					</div>
+				</div>
+				{% endfor %}
+
+			</div>
+			{% if book|length > 0 %}
+			<div class="d-pagination">
+			    <ul class="pagination">
+				{% if book.has_previous %}
+					<li class="page-item">
+						<a class="page-link" href="?page=1">First</a>
+					</li>								
+					<li class="page-item">
+						<a class="page-link" href="?page={{ book.previous_page_number }}">Previous</a>
+					</li>
+				{% endif %}
+				{% for ord in book.paginator.page_range %}
+					{% if book.number == ord %}
+						<li class="page-item active">
+							<span class="page-link">{{ ord }}
+								<span class="sr-only">(current)</span>
+							</span>
+						</li>
+					{% elif ord > book.number|add:'-3' and ord < book.number|add:'3' %}
+						<li class="page-item">
+							<a class="page-link" href="?page={{ ord }}">{{ ord }}</a>
+						</li>
+
+					{% endif %}
+
+				{% endfor %}
+				 {% if book.has_next %}
+					<li class="page-item">
+						<a class="page-link" href="?page={{ book.next_page_number }}">Next</a>
+					</li>
+					<li class="page-item">
+						<a class="page-link" href="?page={{ book.paginator.num_pages }}">Last</a>
+					</li>
+				{% endif %}
+			    </ul>
+			</div>
+			{% else %}
+			<h3 class="text-center mt-5">There are no books Found.</h3>
+			{% endif %}	
+
+{% endblock %}

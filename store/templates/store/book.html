@@ -1,0 +1,159 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load customfunction %}
+{% block container %}
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="grid-item">
+								<div class="view-details" style="cursor:pointer">
+									<img id="product_image" class="lookInsideImg" src="{{ book.coverpage.url }}">
+								</div>
+							</div>	
+							<div class="lookInsideDiv" style="display: none;">
+								<div class="exitBtn"></div>
+								<div class="pagesArea">
+									<ul class="list-unstyled pages">
+										<li><img src="{{ book.bookpage.url }}"></li>
+									</ul>
+								</div>
+							</div>				
+						</div>
+						
+						<div class="col-sm-6">
+							<div class="product-information">
+								<h4>{{ book.name }}</h4>
+								<p style="margin: 0px">by <a style="font-weight:bold" href="{% url 'store:writer' id=book.writer.id %}">{{ book.writer }}</a></p>
+								<div class='rating'>
+									{{ book.totalrating|averagerating:book.totalreview }}
+									<a href='#getreview'><span class='totalrating'>{{ book.totalreview|add:-1 }} Reviews</span></a>
+								</div>
+								<article class="text-justify" style="margin-top:10px;">
+									{{ book.description }}
+								</article>
+
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="pricebox">
+								<p>Price:₹<span> {{ book.price }}</span></p>
+								<button class="btn btn-danger" id="addTocart" data-book-id="{{ book.id }}">
+									<i class="fa fa-shopping-cart"></i>Add to cart
+								</button>
+							</div>
+						</div>
+					</div>	
+				</div>
+
+			    <div class="col-sm-9 mt-5" id="getreview">
+					{% if messages %}
+						<div class="messages">
+						    {% for message in messages %}
+						    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+						    {% endfor %}
+						</div>
+					{% endif %}	
+					<div class="rating-stars text-left">
+						<ul id="stars">
+						  <li id="azaa" class="star" data-value="1"> <i class="fa fa-star fa-fw"></i> </li>
+						  <li id="azbb" class="star" data-value="2"> <i class="fa fa-star fa-fw"></i> </li>
+						  <li id="azcc" class="star" data-value="3"> <i class="fa fa-star fa-fw"></i> </li>
+						  <li id="azdd" class="star" data-value="4"> <i class="fa fa-star fa-fw"></i> </li>
+						  <li id="azee" class="star" data-value="5"> <i class="fa fa-star fa-fw"></i> </li>
+						</ul>
+					</div>		
+				   <form action="" method="POST" class="needs-validation" novalidate="">
+				   	{% csrf_token %}
+					
+						<div class="form-group">
+							{{ form.review_star|as_crispy_field }}
+						</div>
+						<div class="form-group">
+							{{ form.review_text|as_crispy_field }}
+						</div>
+						<div class="form-group">
+							<button class="btn btn-danger" type="submit" style="color: #fff">Submit </button>
+						</div>
+				   </form>	
+					{% for lreview in rreview %}
+					<div class="card">
+						<div class="card-body">
+							<img src="{% static 'images/profile.png' %}"/>
+							<b> {{ lreview.customer }} </b>
+							<div class='rating'>
+								{{ lreview.review_star|averagerating:1 }}
+							</div>
+							<div class="given_review_date">
+								<span style="color:#080808;"> {{ lreview.created }}</span>
+							</div>
+							<p style="margin-top: 10px"> {{ lreview.review_text }} </p>
+						 </div>
+					</div>
+					{% endfor %}
+					
+					<div class="d-pagination">
+					    <ul class="pagination">
+						{% if rreview.has_previous %}
+							<li class="page-item">
+								<a class="page-link" href="?page=1">First</a>
+							</li>								
+							<li class="page-item">
+								<a class="page-link" href="?page={{ rreview.previous_page_number }}">Previous</a>
+							</li>
+						{% endif %}
+						{% for ord in rreview.paginator.page_range %}
+							{% if rreview.number == ord %}
+								<li class="page-item active">
+									<span class="page-link">{{ ord }}
+										<span class="sr-only">(current)</span>
+									</span>
+								</li>
+							{% elif ord > rreview.number|add:'-3' and ord < rreview.number|add:'3' %}
+								<li class="page-item">
+									<a class="page-link" href="?page={{ ord }}">{{ ord }}</a>
+								</li>
+
+							{% endif %}
+
+						{% endfor %}
+						 {% if rreview.has_next %}
+							<li class="page-item">
+								<a class="page-link" href="?page={{ rreview.next_page_number }}">Next</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="?page={{ rreview.paginator.num_pages }}">Last</a>
+							</li>
+						{% endif %}
+					    </ul>
+					</div>		
+				</div>
+			</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript">
+	$(document).on('ready', function() {
+		$(document).on('click', '.lookInsideImg,.lookInsideBg', function (e) {
+			$('div.overlay').fadeIn(500);
+			$('div.lookInsideDiv').fadeIn(500);
+		});
+	   
+	   $(document).on('click', 'div.lookInsideDiv div.exitBtn', function () {
+			$('div.overlay').fadeOut(500);
+			$('div.lookInsideDiv').fadeOut(500);
+			refCaro($('#bookDR99'));
+		});
+		$(document).on('click', 'div.overlay', function () {
+			$('div.overlay').fadeOut(500);
+			$('div.lookInsideDiv').fadeOut(500);
+			refCaro($('#bookDR99'));
+			return false
+		});	
+	});
+</script>
+
+{% endblock %}

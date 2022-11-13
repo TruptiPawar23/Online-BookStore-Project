@@ -1,0 +1,7 @@
+			<ul class="list-group list-group-flush" >
+				<li class="list-group-item" style="background-color: aliceblue"><h1 style="font-family: Serif;font-size: 50px; ">Category</h1></li>
+				{% for p in cat %}
+				<li class="list-group-item" style="background-color: aliceblue"><a href="{% url 'store:category' id=p.id %}" style="font-family: Serif;font-size: 30px; ">{{p.name}}</a></li>
+				{% endfor %}
+				
+			</ul>
